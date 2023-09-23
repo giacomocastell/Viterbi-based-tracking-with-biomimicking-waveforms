@@ -1,0 +1,59 @@
+function viterbi(obs, states, start_p, trans_p, emit_p)
+
+    V = cell(1, length(obs));
+    for st = 1:length(states)
+        V{1}{st} = struct('prob', start_p(st) * emit_p(st, obs(1)), 'prev', []);
+    end
+    
+    % Run Viterbi when t > 0
+    for t = 2:length(obs)
+        V{t} = {};
+        for st = 1:length(states)
+            max_tr_prob = V{t - 1}{1}.prob * trans_p(1, st) * emit_p(st, obs(t));
+            prev_st_selected = 1;
+            for prev_st = 2:length(states)
+                tr_prob = V{t - 1}{prev_st}.prob * trans_p(prev_st, st) * emit_p(st, obs(t));
+                if tr_prob > max_tr_prob
+                    max_tr_prob = tr_prob;
+                    prev_st_selected = prev_st;
+                end
+            end
+
+            max_prob = max_tr_prob;
+            V{t}{st} = struct('prob', max_prob, 'prev', prev_st_selected);
+        end
+    end
+    
+    for line = dptable(V)
+        disp(line);
+    end
+
+    opt = cell(1, length(obs));
+    max_prob = 0.0;
+    best_st = [];
+    
+    % Get most probable state and its backtrack
+    for st = 1:length(states)
+        data = V{end}{st};
+        if data.prob > max_prob
+            max_prob = data.prob;
+            best_st = st;
+        end
+    end
+    opt{end} = best_st;
+    previous = best_st;
+
+    % Follow the backtrack till the first observation
+    for t = length(V) - 1:-1:1
+        opt{t} = V{t + 1}{previous}.prev;
+        previous = V{t + 1}{previous}.prev;
+    end
+
+    opt_states = cell(1, length(opt));
+    for t = 1:length(opt)
+        opt_states{t} = states{opt{t}};
+    end
+
+    fprintf('The steps of states are %s with highest probability of %.7f\n', ...
+        strjoin(opt_states, ' '), max_prob);
+end
