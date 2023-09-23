@@ -67,5 +67,7 @@ end
 
 %% Results visualization
 if scenario_settings.plot_results
+    
     plotResults( simulation_results, scenario_settings, output );
+    
 end
