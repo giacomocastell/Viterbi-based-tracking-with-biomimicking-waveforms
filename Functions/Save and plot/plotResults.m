@@ -1,7 +1,7 @@
 function plotResults ( simulation_results, scenario_settings, output )
 
 % Extract variables form output structure
-viterbi_path = strcat(output.current_folder,'/viterbi_results.txt');
+viterbi_path = fullfile(output.current_folder,'viterbi_results.txt');
 start_idx    = output.start_idx;
 end_idx      = output.end_idx;
 

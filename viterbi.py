@@ -16,7 +16,7 @@ else:
     waveform = 'biomimicked'
 
 # Main path to .mat files
-mainpath = 'Output/'
+mainpath = '../Output/'
 
 # If emission matrix is to be taken from somewhere else, pass it to the function
 emission_matrix_path = ''

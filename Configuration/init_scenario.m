@@ -11,7 +11,7 @@ current_folder = pwd;
 scenario_settings.input_folder = fullfile(current_folder, 'Data/');
 
 % Output path
-scenario_settings.output_folder = fullfile(current_folder, 'Output/');
+scenario_settings.output_folder = fullfile(current_folder, '..' ,'Output/');
 
 % Viterbi script location
 scenario_settings.viterbi_path = fullfile(current_folder, 'viterbi.py');
