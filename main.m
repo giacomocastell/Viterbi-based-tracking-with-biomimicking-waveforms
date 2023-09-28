@@ -30,7 +30,7 @@ if scenario_settings.compute_emission_matrix
     
     % Store or not new emission matrix
     if scenario_settings.save_emission_matrix
-        save_emission_matrix(scenario_settings, emission_matrix)
+        save_emission_matrix(scenario_settings, simulation_results, emission_matrix)
     end
 
 end
@@ -46,7 +46,7 @@ if scenario_settings.save_results
     
     [output] = saveResults(simulation_results, scenario_settings, start_idx, end_idx);
     
-    % Save the scenario in a data structure
+    % Save all simulated scenario
 
     simulated_scenario.start_idx           = start_idx; 
     simulated_scenario.end_idx             = end_idx;

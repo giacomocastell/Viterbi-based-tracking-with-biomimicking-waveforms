@@ -67,7 +67,7 @@ scenario_settings.timeaxis   = timeaxis;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Draw initial position of the transmitter/receiver
-pos_TX = [-117.3992, 33.0924, -120];
+pos_TX = [-117.3993, 33.0926, -120];
 pos_RX = [-117.3995, 33.0928, -120];
 
 % Movement of the target

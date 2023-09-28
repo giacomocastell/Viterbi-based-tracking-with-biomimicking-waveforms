@@ -16,9 +16,9 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
 
     # Sub-path of the emission matrix (if not given)
     if emission_matrix_path == '':
-        filename = date + '_' + waveform + '.mat'
+        filename = date + '_' + waveform + '_' + distance + 'meters.mat'
         emission_matrix_path = os.path.join(mainpath, 'Emission matrix',filename)
-
+    
     # Import range axis
     mat = io.loadmat(os.path.join(path, 'ranges.mat'))
     rng = mat['range_axis']
@@ -34,6 +34,8 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
     M = np.abs(val[:, index_1:index_2])
     mr = np.abs(rng[:, index_1:index_2])
     B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
+
+    assert B.shape[1] == abs(index_1 - index_2), 'Second index is too large'
 
     return path, M, mr, B
 
