@@ -16,6 +16,7 @@ function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path )
     window_len = round(1e-2*size(y,1));
     overlapping = round(0.95*window_len);
     freq_resolution = 1024;
+    
     % [s,w,t]=spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
     [s,w,t]=stft(y,fs,'Window',hamming(window_len,"periodic"),'OverlapLength',overlapping,'FrequencyRange',"onesided");
     

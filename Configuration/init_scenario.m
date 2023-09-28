@@ -94,6 +94,10 @@ scenario_settings.speed       = speed;
 % 'chirp', 'biomimicking', 'airgun'
 waveform_type = 'biomimicking'; 
 
+% Desired SNR
+SNRdB = 10;
+
+scenario_settings.SNRdB = SNRdB;
 scenario_settings.waveform_type = waveform_type;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%

@@ -4,12 +4,12 @@ import os
 import datetime
 from scipy import io
 
-def getData(mainpath, emission_matrix_path, index_1, index_2, waveform):
+def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance):
     
     # Sub-path of the simulation results
     today_date = datetime.date.today()
     date = today_date.strftime("%Y-%m-%d")
-    subpath = date + '_' + waveform + '_' + str(index_1) + '_' + str(index_2)
+    subpath = date + '_' + waveform + '_' + str(index_1) + '_' + str(index_2) + '_' + distance + 'meters'
 
     # Final path of the simulation results
     path = os.path.join(mainpath,subpath)

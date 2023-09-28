@@ -1,0 +1,59 @@
+function [signal_plus_noise] = add_noise_model( signal, SNRdB, flag )
+
+if nargin == 3
+    
+    signal_plus_noise = awgn(signal, SNRdB,'measured');
+
+else
+    
+    % Samples considered
+    N = 1000;
+    
+    % Index where to start from
+    start_idx = 100;
+    
+    % SNR in dB scale
+    SNRdB = 10;
+    % SNR to linear scale
+    SNR = 10^(SNRdB/10);
+    
+    % Length of considered signal
+    L = length(x);
+    
+    % Calculate actual symbol energy
+    Esig=sum(abs(x).^2)/(L); 
+    
+    % Find the noise spectral density
+    N0=Esig/SNR; 
+    
+    if ( isreal(x))
+        % Standard deviation for AWGN Noise when x is real
+        noiseSigma = sqrt (N0);
+        % computed noise
+        n = noiseSigma*randn(1,L);
+    else
+        noiseSigma= sqrt (N0/2);
+        n = noiseSigma*(randn(1,L)+1i*randn(1,L));
+    end
+    
+    % First N samples of noise
+    nw = n(1:N);
+    
+    % Signal + noise
+    y = x + n;
+    
+    % Range to consider
+    rngs = start_idx:start_idx + N;
+    
+    % Noise energy
+    Pn = sum(abs(nw).^2)/length(nw);
+    
+    % Signal+noise energy within same time interval
+    Psn = sum(abs(y(rngs)).^2)/length(y(rngs));
+    
+    fprintf('\nMyMethod (P_N+S)/P_N - SNR_lin - 1 = %.2f\n\n',Psn/Pn - SNR - 1)
+
+end
+
+
+end

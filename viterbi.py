@@ -5,11 +5,12 @@ import sys
 import os
 
 # Read inputs from Matlab script
-if len(sys.argv) > 3:
+if len(sys.argv) > 4:
     # Access command-line arguments
     index_1 = int(sys.argv[1])
     index_2 = int(sys.argv[2])
     waveform = sys.argv[3]
+    distance = sys.argv[4]
 else:
     index_1 = 1000
     index_2 = 2000
@@ -19,10 +20,11 @@ else:
 mainpath = '../Output/'
 
 # If emission matrix is to be taken from somewhere else, pass it to the function
-emission_matrix_path = ''
+# emission_matrix_path = ''
+emission_matrix_path = '/home/giacomocastell/Desktop/TESI/Output/Emission matrix/2023-09-23_biomimicking.mat'
 
 # Read data
-[path, data, range, emission_matrix] = fn.getData(mainpath, emission_matrix_path, index_1, index_2, waveform)
+[path, data, range, emission_matrix] = fn.getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance)
 
 # Prepare for Viterbi
 [observations, transition_matrix, states, priors] = fn.prepareViterbi(data, range)

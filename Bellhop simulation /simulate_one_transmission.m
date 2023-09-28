@@ -31,9 +31,9 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     % Simulate scenario (two-way convolution)
     [h,th,y,ty] = compute_impulse_response(x,t,fs,Arr,scenario_settings.loss_factor);
     
-    % Add AWGN with SNR = 10dB
-    y = awgn(y,10,'measured');
-
+    % Add AWGN with desired SNR (before cross-correlation)
+    y = add_noise_model(y, scenario_settings.SNRdB);
+    
     % Filter and move signals to baseband
     downsampling_factor = floor(fs/f2);
     cutoff = abs(f2-f1);

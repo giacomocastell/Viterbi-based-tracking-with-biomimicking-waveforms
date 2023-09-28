@@ -1,4 +1,4 @@
-function mat2py(lower_bound, upper_bound, scenario_settings)
+function mat2py(lower_bound, upper_bound, scenario_settings, simulation_results)
 
 waveform = scenario_settings.waveform_type;
 path = scenario_settings.viterbi_path;
@@ -7,8 +7,10 @@ path = scenario_settings.viterbi_path;
 lower_bound = num2str(lower_bound);
 upper_bound = num2str(upper_bound);
 
+distance = num2str(fix(simulation_results.actual_distance(1)));
+
 % Run python script, passing parameters to reduce computations
-status = system(['python3 ', path, ' "', lower_bound, '" "', upper_bound, '" "', waveform, '"']);
+status = system(['python3 ', path, ' "', lower_bound, '" "', upper_bound, '" "', waveform, '" "', distance,'"']);
 
 % Check if everything worked correctly
 if status == 0
