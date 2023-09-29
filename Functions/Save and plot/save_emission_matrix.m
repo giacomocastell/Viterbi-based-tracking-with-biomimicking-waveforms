@@ -1,4 +1,4 @@
-function save_emission_matrix( scenario_settings, simulation_results, emission_matrix )
+function save_emission_matrix( scenario_settings, signalTX, simulation_results, emission_matrix )
 
 % Extract current date
 currentDateTime = datestr(now, 'yyyy-mm-dd');
@@ -11,7 +11,7 @@ if ~exist(folderPath)
     mkdir(folderPath);
 end
 
-fileName = [currentDateTime, '_', scenario_settings.waveform_type, '_', num2str(fix(simulation_results.actual_distance(1))), 'meters'];
+fileName = [currentDateTime, '_', signalTX.signal_tag, '_', num2str(fix(simulation_results.actual_distance(1))), 'meters'];
 fileNameMat = strcat( fileName, '.mat');
 
 save( fullfile (folderPath, fileNameMat),'emission_matrix');

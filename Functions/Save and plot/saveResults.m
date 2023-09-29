@@ -1,4 +1,4 @@
-function [output] = saveResults(simulation_results, scenario_settings, start_idx, end_idx)
+function [output] = saveResults(simulation_results, signalTX, scenario_settings, start_idx, end_idx)
 
 % Extract simulation results
 range_axis  = simulation_results.range_axis;
@@ -11,7 +11,7 @@ currentDateTime = datestr(now, 'yyyy-mm-dd');
 distance = fix(simulation_results.actual_distance(1));
 
 % Define name and path of output
-folderName = [currentDateTime, '_', scenario_settings.waveform_type ,'_', num2str(distance),'meters'];
+folderName = [currentDateTime, '_', signalTX.signal_tag ,'_', num2str(distance),'meters'];
 folderPath = fullfile(scenario_settings.output_folder, folderName);
 
 % Create new folder if it does not exist

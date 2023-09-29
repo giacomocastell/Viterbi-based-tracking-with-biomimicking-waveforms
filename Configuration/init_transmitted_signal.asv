@@ -14,22 +14,20 @@ switch scenario_settings.waveform_type
 
     case 'biomimicking'
 
-%         f1 = 20e3;                        % To tune if use a new waveform  
-%         f2 = 30e3;                        % To tune if use a new waveform
-%         path = strcat(pwd,'/../Biomimicking_dataset/Original/');
-%         signal_type = scenario_settings.biomimicking_signal;
+        f1 = 20e3;                        % To tune if use a new waveform  
+        f2 = 30e3;                        % To tune if use a new waveform
+        A=1;
         
-        f1 = 10e3;
-        f2 = 15e3;
-        path = strcat(pwd,'/Data/Waveforms/biomimicking/');
-        signal_type = 'dolphin';
+        % path = strcat(pwd,'/Data/Waveforms/biomimicking/');
+        % signal_type = 'dolphin';
         
+        path = strcat(pwd,'/../Biomimicking_dataset/Original/');
+        signal_type = scenario_settings.biomimicking_signal;
         center_frequency = round((f1+f2)/2);
         [x,t,tau,fs] = biomimicked_signal_generation( path, signal_type, center_frequency );
-        A=1;
         x = A*x;
 
-        signal_tag = strcat(scenario_settings.waveform_type, '_' ,signal_type);
+        signal_tag = signal_type;
 
     case 'airgun'
         filename = 'tpres_ppres.txt';
@@ -45,8 +43,8 @@ switch scenario_settings.waveform_type
         error('Wrong waveform flag.');
 end
 
-signalTX.x          = x;
-signalTX.t          = t;
+signalTX.x   = x;
+signalTX.t   = t;
 signalTX.f1         = f1;
 signalTX.f2         = f2;
 signalTX.A          = A;

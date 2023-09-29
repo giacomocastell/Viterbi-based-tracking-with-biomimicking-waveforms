@@ -30,12 +30,14 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
     # Import empirical emission matrix
     mat = io.loadmat(emission_matrix_path)
     emission_matrix = mat['emission_matrix']
-
+    
+    if emission_matrix.shape[1] != abs(index_1 - index_2):
+        print('\nSecond index is too large, maximum dimension of the emission matrix is being selected\n')
+        index_2 = len(emission_matrix) - 1
+        
     M = np.abs(val[:, index_1:index_2])
     mr = np.abs(rng[:, index_1:index_2])
     B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
-
-    assert B.shape[1] == abs(index_1 - index_2), 'Second index is too large'
 
     return path, M, mr, B
 

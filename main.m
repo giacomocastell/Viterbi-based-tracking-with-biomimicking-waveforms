@@ -8,7 +8,7 @@ addpath(genpath(pwd));
 scenario_settings = init_scenario();
 
 %%%%% Define transmitted signal
-signalTX = init_transmitted_signal(scenario_settings.waveform_type);
+signalTX = init_transmitted_signal(scenario_settings);
 
 %% Simulate whole scenario
 
@@ -30,7 +30,7 @@ if scenario_settings.compute_emission_matrix
     
     % Store or not new emission matrix
     if scenario_settings.save_emission_matrix
-        save_emission_matrix(scenario_settings, simulation_results, emission_matrix)
+        save_emission_matrix(scenario_settings, signalTX, simulation_results, emission_matrix)
     end
 
 end
@@ -41,15 +41,19 @@ if scenario_settings.FoV_restricted
     % Restrict field of view (memory and computational time reasons)
     [~,start_idx] = min(abs((min(simulation_results.actual_distance)*0.5 - simulation_results.range_axis)));
     [~,end_idx]   = min(abs((max(simulation_results.actual_distance)*1.5 - simulation_results.range_axis)));
+
+    start_idx = length(1:simulation_results.range_axis(2)-simulation_results.range_axis(1):simulation_results.range_axis(1));
+    end_idx   = start_idx + length(simulation_results.range_axis);
+
 else
     start_idx = 1;
     end_idx   = length(simulation_results.range_axis);
 end
-
+%%
 % Store or not results
 if scenario_settings.save_results
     
-    [output] = saveResults(simulation_results, scenario_settings, start_idx, end_idx);
+    [output] = saveResults(simulation_results,signalTX, scenario_settings, start_idx, end_idx);
     
     % Save all simulated scenario
 
@@ -73,7 +77,7 @@ end
 
 if scenario_settings.run_viterbi
     
-    mat2py(start_idx - 1, end_idx - 1, scenario_settings, simulation_results);
+    mat2py(start_idx - 1, end_idx - 1, scenario_settings, signalTX, simulation_results);
     
     % Read path to the emission matrix
     fid = fopen( fullfile(output.current_folder,'emission_matrix.txt') );

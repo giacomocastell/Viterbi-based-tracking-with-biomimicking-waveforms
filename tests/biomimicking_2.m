@@ -6,13 +6,20 @@ clear all;
 %% Read data
 
 % path = '/home/giacomocastell/Desktop/TESI/Biomimicking_dataset/Original/';
-path = '/home/giacomocastell/Downloads/';
+path = '/home/giacomocastell/Desktop/TESI/Codes/Data/Waveforms/biomimicking/';
 
-filesdir = strcat(path,'*.wav');
+% filesdir = strcat(path,'*.wav');
+% files=dir(filesdir);
+% [y,fs] = audioread(fullfile(path,files(4).name));
 
-files=dir(filesdir);
+filename = 'dolphin';
 
-[y,fs] = audioread(fullfile(path,files(4).name));
+% filename = 'Beaked_Whale';
+% filename = 'Dolphin';
+% filename = 'Humpback_Whale';
+% filename = 'Orca';
+% filename = 'Sea_Lion';
+[y,fs] = audioread(fullfile(path, strcat(filename,'.wav')));
 
 %% Compute spectrogram
 
@@ -25,6 +32,7 @@ freq_resolution = 1024;
 [s,w,t]=stft(y,fs,'Window',hamming(window_len,"periodic"),'OverlapLength',overlapping,'FrequencyRange',"onesided");
 % mesh(t,w,abs(s));
 
+spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
 % title('Spectrogram');
 % caxis([-90 -50]);
 % ylim([15 40]);
@@ -34,6 +42,73 @@ tau=size(y,1)/fs;                       % Duration of the pulse [s]
 timeaxis=[0:1/fs:tau-1/fs];             % Original signal time axis
 N=round(fs*tau);                        % Number of samples
 freqaxis=[0:N-1]*fs/N;                  % Original signal frequency axis
+
+%% Gaussian weighting of the spectrogram (1)
+
+gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
+amp = 1; 
+var = 1e3;
+mu = 12e3;
+
+g = gauss(w, amp, mu, var);
+
+sgauss=zeros(size(s));
+smax=zeros(size(s));
+wmax=zeros(1,size(s,1));
+
+for i=1:length(t)                   % For each time
+    
+    sgauss(:,i)=(s(:,i)).*g;        % Apply gaussian filter
+    [~,Midx]=max(sgauss(:,i));      % Find index of max
+    wmax(i)=w(Midx);                % Frequency selected
+    smax(Midx,i)=sgauss(Midx,i);    
+end 
+
+[xinv,tinv] = istft(smax,fs,'Window',hamming(window_len,'periodic'),'OverlapLength',overlapping,'FrequencyRange',"onesided");
+
+% % Visualize the spectrogram of reconstructed signal
+figure;
+spectrogram(xinv,window_len,overlapping,freq_resolution,fs,'yaxis');
+figure;
+spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
+
+
+%% Gaussian weighting of the spectrogram (2)
+
+gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
+amp = 1; 
+var = 1e3;
+mu = 25e3;
+
+g = gauss(w, amp, mu, var);
+
+sgauss=zeros(size(s));
+smax=zeros(size(s));
+wmax=zeros(1,size(s,1));
+
+for i=1:length(t)                   % For each time
+    
+%     [~,maxPtIdx]=max(s(endFreqidx:startFreqidx,i));
+%     mu = w(maxPtIdx+endFreqidx);
+%     y = gauss(w, amp, mu, var);
+    
+    sgauss(:,i)=(s(:,i)).*g;        % Apply gaussian filter
+    [~,Midx]=max(sgauss(:,i));      % Find index of max
+    wmax(i)=w(Midx);                % Frequency selected
+    smax(Midx,i)=sgauss(Midx,i);    
+end    
+
+% % Invert spectrogram
+[xinv,tinv] = istft(smax,fs,'Window',hamming(window_len,'periodic'),'OverlapLength',overlapping,'FrequencyRange',"onesided");
+
+% % Visualize the spectrogram of reconstructed signal
+figure;
+spectrogram(xinv,window_len,overlapping,freq_resolution,fs,'yaxis');
+figure;
+spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
+% stem(t,wmax)
+% mesh(t,w,abs(smax));
+
 
 %% Compute start time and frequency
 
@@ -84,39 +159,3 @@ spectrogram(xp,window_len,overlapping,freq_resolution,fs,'yaxis');
 figure;
 spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
 % clim([-80 -40]);
-
-%% Gaussian weighting of the spectrogram
-
-gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
-amp = 1; 
-var = 1e3;
-mu = 12e3;
-
-g = gauss(w, amp, mu, var);
-
-sgauss=zeros(size(s));
-smax=zeros(size(s));
-wmax=zeros(1,size(s,1));
-
-for i=1:length(t)                   % For each time
-    
-%     [~,maxPtIdx]=max(s(endFreqidx:startFreqidx,i));
-%     mu = w(maxPtIdx+endFreqidx);
-%     y = gauss(w, amp, mu, var);
-    
-    sgauss(:,i)=(s(:,i)).*g;        % Apply gaussian filter
-    [~,Midx]=max(sgauss(:,i));      % Find index of max
-    wmax(i)=w(Midx);                % Frequency selected
-    smax(Midx,i)=sgauss(Midx,i);    
-end    
-
-% % Invert spectrogram
-[xinv,tinv] = istft(smax,fs,'Window',hamming(window_len,'periodic'),'OverlapLength',overlapping,'FrequencyRange',"onesided");
-
-% % Visualize the spectrogram of reconstructed signal
-figure;
-spectrogram(xinv,window_len,overlapping,freq_resolution,fs,'yaxis');
-figure;
-spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
-% stem(t,wmax)
-% mesh(t,w,abs(smax));

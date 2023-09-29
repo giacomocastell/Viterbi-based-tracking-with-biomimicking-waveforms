@@ -51,7 +51,12 @@ value = cell(num_pulses, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % First cell element -> result of simulation
-[dist(1),range{1, 1},value{1}] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init);
+[dist(1),range_axis,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init);
+
+% Remove zeros before and after
+[firstNonzeroIndex, lastNonzeroIndex] = remove_zero_padding(corr);
+value{1}    = corr(firstNonzeroIndex:lastNonzeroIndex);
+range{1, 1} = range_axis(firstNonzeroIndex:lastNonzeroIndex);
 
 % Second cell element -> first element of simulation
 range{1, 2} = range{1, 1}(1);
@@ -83,8 +88,13 @@ while i <= num_pulses
     pos_target(i,3) = pos_target(i-1,3) + dep_shift;
     
     % Simulate Bellhop 
-    [dist(i),range{i, 1},value{i}] = simulate_one_transmission(signalTX,scenario_settings,pos_target(i,:));
+    [dist(i),range_axis,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_target(i,:));
     
+    % Remove zeros before and after
+    [firstNonzeroIndex, lastNonzeroIndex] = remove_zero_padding(corr);
+    value{i}    = corr(firstNonzeroIndex:lastNonzeroIndex);
+    range{i, 1} = range_axis(firstNonzeroIndex:lastNonzeroIndex);
+
     if dist(i) > 0.5
         
     else

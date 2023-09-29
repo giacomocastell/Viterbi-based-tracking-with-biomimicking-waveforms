@@ -1,7 +1,8 @@
-function mat2py(lower_bound, upper_bound, scenario_settings, simulation_results)
+function mat2py(lower_bound, upper_bound, scenario_settings, signalTX, simulation_results)
 
-waveform = scenario_settings.waveform_type;
+waveform = signalTX.signal_tag;
 path = scenario_settings.viterbi_path;
+
 
 % Restrict field of view + convert to strings
 lower_bound = num2str(lower_bound);

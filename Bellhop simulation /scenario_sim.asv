@@ -51,7 +51,13 @@ value = cell(num_pulses, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % First cell element -> result of simulation
-[dist(1),range{1, 1},value{1}] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init);
+[dist(1),range,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init);
+
+% Remove zeros before and after
+[firstNonzeroIndex, lastNonzeroIndex] = remove_zero_padding(corr);
+value{1}    = corr(firstNonzeroIndex:lastNonzeroIndex);
+range{1, 1} = range(firstNonzeroIndex:lastNonzeroIndex);
+
 
 % Second cell element -> first element of simulation
 range{1, 2} = range{1, 1}(1);
@@ -85,6 +91,12 @@ while i <= num_pulses
     % Simulate Bellhop 
     [dist(i),range{i, 1},value{i}] = simulate_one_transmission(signalTX,scenario_settings,pos_target(i,:));
     
+    % Remove zeros before and after
+    [firstNonzeroIndex, lastNonzeroIndex] = remove_zero_padding(corr);
+    value{1}    = corr(firstNonzeroIndex:lastNonzeroIndex);
+    range{1, 1} = range(firstNonzeroIndex:lastNonzeroIndex);
+
+
     if dist(i) > 0.5
         
     else
@@ -130,6 +142,10 @@ for i=1:num_pulses
     [~,shift] = min(abs(range{i, 2} - rng));
     val(i,shift:length(value{i})+shift-1) = value{i};
 end
+
+if size(val,2) ~= length(rng)
+    val = val(:,1:length(rng));
+end 
 
 simulation_results.actual_distance        = dist;
 simulation_results.range_axis             = rng;
