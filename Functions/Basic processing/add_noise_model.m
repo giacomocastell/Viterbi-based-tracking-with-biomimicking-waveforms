@@ -27,7 +27,7 @@ Pn = sum(abs(n).^2)/length(n);
 % Signal + noise energy within same time interval
 Psn = sum(abs(signal_plus_noise.^2)/length(signal_plus_noise));
 
-if ~(abs(Psn/Pn - SNRlin - 1) < 1)
+if ~(abs(Psn/Pn - SNRlin - 1) < 2)
 
     warning('Noise specs not met');
     fprintf('\n (P{N+S})/P{N} - SNR_lin - 1 = %.2f (should be close to 0)\n\n',Psn/Pn - SNRlin - 1)

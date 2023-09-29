@@ -12,10 +12,10 @@ if len(sys.argv) > 4:
     waveform = sys.argv[3]
     distance = sys.argv[4]
 else:
-    index_1 = 2641
-    index_2 = 8601
-    waveform = 'biomimicking'
-    distance = '267'
+    index_1 = 0
+    index_2 = 397
+    waveform = 'airgun'
+    distance = '52'
 
 # Main path to .mat files
 mainpath = '/home/giacomocastell/Desktop/TESI/Output/'
@@ -36,6 +36,11 @@ viterbi_path = fn.viterbi(observations, states, priors, transition_matrix, emiss
 
 # Save results into txt file
 np.savetxt( os.path.join(path, 'viterbi_results.txt'), (np.array(viterbi_path) + index_1))
+
+# Store the emission matrix path used
+file = open(os.path.join(path, 'emission_matrix.txt'), "w")
+file.write(emission_matrix_path)
+file.close()
 
 # Plot results
 fn.plotresults(data, range, viterbi_path)

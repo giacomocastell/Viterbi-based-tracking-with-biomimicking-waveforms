@@ -9,7 +9,7 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
     # Sub-path of the simulation results
     today_date = datetime.date.today()
     date = today_date.strftime("%Y-%m-%d")
-    subpath = date + '_' + waveform + '_' + str(index_1) + '_' + str(index_2) + '_' + distance + 'meters'
+    subpath = date + '_' + waveform + '_' + distance + 'meters'
 
     # Final path of the simulation results
     path = os.path.join(mainpath,subpath)
@@ -51,13 +51,14 @@ def prepareViterbi(M, mr):
     # Transition matrix
     vmax = 1
     dt = 0.5
-
+    
     k = mr[0, :]
     j = mr[0, :]
 
     A = np.abs(k - j[:, np.newaxis]) <= vmax * dt
     A = A * vmax * dt
     A = {index+1 : row.tolist() for index, row in enumerate(A)}
+
 
     # Prior probabilities (uniform)
     priors = np.full(mr.shape[1],1/mr.shape[1])
@@ -78,6 +79,7 @@ def viterbi(obs, states, start_p, trans_p, emit_p, bias=0):
 
     # Run Viterbi when t > 0
     for t in range(1, len(obs)):
+        print(f"Running Viterbi iteration {t}/{len(obs)}", end='\r')
         V.append({})
         for st in states:
             max_tr_prob = V[t - 1] [states[0]] ["prob"] * trans_p[states[0]] [st] * emit_p[st] [obs[t]]

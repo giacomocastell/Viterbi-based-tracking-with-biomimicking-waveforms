@@ -11,7 +11,7 @@ currentDateTime = datestr(now, 'yyyy-mm-dd');
 distance = fix(simulation_results.actual_distance(1));
 
 % Define name and path of output
-folderName = [currentDateTime, '_', scenario_settings.waveform_type ,'_', num2str(start_idx), '_', num2str(end_idx), '_', num2str(distance),'meters'];
+folderName = [currentDateTime, '_', scenario_settings.waveform_type ,'_', num2str(distance),'meters'];
 folderPath = fullfile(scenario_settings.output_folder, folderName);
 
 % Create new folder if it does not exist

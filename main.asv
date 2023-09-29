@@ -42,7 +42,7 @@ if scenario_settings.FoV_restricted
     [~,start_idx] = min(abs((min(simulation_results.actual_distance)*0.5 - simulation_results.range_axis)));
     [~,end_idx]   = min(abs((max(simulation_results.actual_distance)*1.5 - simulation_results.range_axis)));
 else
-    start_idx = 1;
+    start_idx = 0;
     end_idx   = length(simulation_results.range_axis);
 end
 
@@ -53,11 +53,14 @@ if scenario_settings.save_results
     
     % Save all simulated scenario
 
-    simulated_scenario.FoV                 = [start_idx end_idx]; 
+    simulated_scenario.start_idx           = start_idx; 
+    simulated_scenario.end_idx             = end_idx;
     simulated_scenario.scenario_settings   = scenario_settings;
     simulated_scenario.signalTX            = signalTX;
     simulated_scenario.simulation_results  = simulation_results;
     
+    save( fullfile (output.current_folder, 'scenario.mat'),'simulated_scenario');
+
 else
     
     % If not saved, only visualize the data
@@ -73,22 +76,15 @@ end
 
 if scenario_settings.run_viterbi
     
-    mat2py(start_idx - 1, end_idx - 1, scenario_settings, simulation_results);
+    mat2py(start_idx, end_idx, scenario_settings, simulation_results);
     
-    % Read path to the emission matrix
+    
+    
     fid = fopen( fullfile(output.current_folder,'emission_matrix.txt') );
     emission_matrix_path = textscan(fid,'%s','delimiter','\n'); 
     fclose(fid);
-    
-    % Store into output struct
-    simulated_scenario.emission_matrix_path  = emission_matrix_path{1}{1};
-    
-    % Save output struct
-    save( fullfile (output.current_folder, 'scenario.mat'),'simulated_scenario');
-    
-    % Delete file containing emission matrix path
-    delete (fullfile(output.current_folder,'emission_matrix.txt'))
 
+    
 end
 
 %% Results visualization

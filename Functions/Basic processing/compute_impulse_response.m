@@ -2,7 +2,7 @@
 %%%% Compute channel impulse response with Bellhop output
 %%%%
 
-function [h,t_ir,y,t_out]=compute_impulse_response(x,t,fs,arrivals,loss_factor)
+function [y,t_out]=compute_impulse_response(x,t,fs,arrivals,loss_factor)
     
     drawplot = 0;
     

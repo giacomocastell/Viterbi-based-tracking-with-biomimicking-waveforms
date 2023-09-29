@@ -29,7 +29,7 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     dist = computeDistanceTXRX(pos_TX, pos_RX);
 
     % Simulate scenario (two-way convolution)
-    [h,th,y,ty] = compute_impulse_response(x,t,fs,Arr,scenario_settings.loss_factor);
+    [y,ty] = compute_impulse_response(x,t,fs,Arr,scenario_settings.loss_factor);
     
     % Add AWGN with desired SNR (before cross-correlation)
     y = add_noise_model(y, scenario_settings.SNRdB);
@@ -53,7 +53,7 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     if strcmp (scenario_settings.waveform_type, 'chirp') || strcmp(scenario_settings.waveform_type, 'biomimicking')
         group_delay = (length(x_bb) - 1) / (2 * fs_downsampled); 
     else
-        [~, locs_peak] = findpeaks(abs(x));
+        [~, locs_peak] = max(abs(x));
         group_delay = locs_peak(1)/(2*fs_downsampled); 
     end
     
@@ -65,7 +65,7 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     
     % Remove eventual negative ranges
     corr = corr(range_corr > 0);
-    delay_corr = delay_corr(range_corr > 0);
+    % delay_corr = delay_corr(range_corr > 0);
     range_corr = range_corr(range_corr > 0);
     
     % Start from first recorded nonzero element
@@ -76,7 +76,7 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     else
         firstNonzeroIndex = indices(1); 
     end
-%     firstNonzeroIndex=1;
+    firstNonzeroIndex=1;
     % Update correlation and spatial reference
     corr = corr(firstNonzeroIndex:end);
     range_corr = range_corr(firstNonzeroIndex:end);

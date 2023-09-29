@@ -131,10 +131,6 @@ for i=1:num_pulses
     val(i,shift:length(value{i})+shift-1) = value{i};
 end
 
-if size(val,2) ~= length(rng)
-    val = val(:,1:length(rng));
-end 
-
 simulation_results.actual_distance        = dist;
 simulation_results.range_axis             = rng;
 simulation_results.value                  = val;

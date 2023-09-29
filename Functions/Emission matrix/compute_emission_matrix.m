@@ -9,8 +9,8 @@ fprintf('\nEmission matrix computation start\n');
 drawplot = 0;
 num_iterations = scenario_settings.num_iterations;
 num_iterations=1;
-% Cumulative vector to accumulate diplacements row by row
-emission_matrix_row = zeros(1,2 * length(simulation_results.range_axis) + 1);
+% Cumulative vector to accumulate diplacements row by row (arbitrarily big)
+emission_matrix_row = zeros(1,2 * length(simulation_results.range_axis) + 100);
 
 % Center of the vector (zero displacement)
 zero_index = ceil(length(emission_matrix_row)/2);
@@ -67,17 +67,17 @@ for i=1:num_iterations
 end
 
 % Fill real emission matrix
-range_axis_target      = simulation_results.range_axis;
-value_target           = simulation_results.value;
+% range_axis_target      = simulation_results.range_axis;
+% value_target           = simulation_results.value;
 
 % Initialize emission matrix
-emission_matrix = zeros(size(value_target,2));
+emission_matrix = zeros(size(value_random,2));
 
 for i=1:length(emission_matrix)
     
     % Align actual distance of the target with center of the row
     total_shift = abs(zero_index-i);
-    emission_matrix(i,:) = emission_matrix_row(total_shift:total_shift + length(range_axis_target)-1);
+    emission_matrix(i,:) = emission_matrix_row(total_shift:total_shift + length(range_axis_random)-1);
 
 end
 

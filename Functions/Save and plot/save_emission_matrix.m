@@ -11,7 +11,7 @@ if ~exist(folderPath)
     mkdir(folderPath);
 end
 
-fileName = [currentDateTime, '_', scenario_settings.waveform_type, '_', num2str(fix(simulation_results.actual_distance(1))), '_meters'];
+fileName = [currentDateTime, '_', scenario_settings.waveform_type, '_', num2str(fix(simulation_results.actual_distance(1))), 'meters'];
 fileNameMat = strcat( fileName, '.mat');
 
 save( fullfile (folderPath, fileNameMat),'emission_matrix');
