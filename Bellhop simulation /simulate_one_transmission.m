@@ -2,7 +2,7 @@
 %%%% Obtain data from Bellhop and process 
 %%%%
 
-function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_RX)
+function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_RX, emission_matrix_flag)
     
     % Scenario variables (increase readability)
     maxDepth   = scenario_settings.maxDepth;
@@ -49,7 +49,7 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     % height
     corr(abs(corr) < 0.5*max(abs(corr))) = 0;
 
-    
+    % Group delay ???????
     if strcmp (scenario_settings.waveform_type, 'chirp') || strcmp(scenario_settings.waveform_type, 'biomimicking')
         group_delay = (length(x_bb) - 1) / (2 * fs_downsampled); 
     else
@@ -68,18 +68,15 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     % delay_corr = delay_corr(range_corr > 0);
     range_corr = range_corr(range_corr > 0);
     
-    % Start from first recorded nonzero element
-    indices = find(corr ~= 0);
-    if isempty(indices)
-        warning('No nonzero elements found in the correlation.');
-        firstNonzeroIndex = 0;
-    else
-        firstNonzeroIndex = indices(1); 
+    if ~emission_matrix_flag
+        
+        [start_idx, end_idx] = remNonzero(corr);
+        
+        % Update correlation and spatial reference
+        corr = corr(start_idx:end_idx);
+        range_corr = range_corr(start_idx:end_idx);
+    
     end
-    firstNonzeroIndex=1;
-    % Update correlation and spatial reference
-    corr = corr(firstNonzeroIndex:end);
-    range_corr = range_corr(firstNonzeroIndex:end);
 
     % Extract peaks and compute estimates of the distance
     [pks_corr, locs_corr] = findpeaks(abs(corr),range_corr);

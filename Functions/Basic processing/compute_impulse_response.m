@@ -62,7 +62,7 @@ function [y,t_out]=compute_impulse_response(x,t,fs,arrivals,loss_factor)
 
     % Phase reversal due to reflection
     % and multiplication by a loss factor
-    y_one_way = -y_one_way * loss_factor;   
+    y_one_way = y_one_way * loss_factor;   
     
     % Find time axis
     t_one_way = t_ir(1) + t(1) + (0:length(y_one_way)-1) / fs;

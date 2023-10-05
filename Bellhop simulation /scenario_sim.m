@@ -12,7 +12,7 @@ function [simulation_results] = scenario_sim(signalTX,scenario_settings,emission
 num_pulses          = scenario_settings.num_pulses;
 pos_TX              = scenario_settings.pos_TX;
 
-drawplot = 0;
+drawplot = 1;
 
 % Check if the function is called in the context of emission matrix
 % calculation. In this case, draw position of receiver at random
@@ -51,7 +51,7 @@ value = cell(num_pulses, 1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % First cell element -> result of simulation
-[dist(1),range{1, 1},value{1}] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init);
+[dist(1),range{1, 1},value{1}] = simulate_one_transmission(signalTX,scenario_settings,pos_RX_init, emission_matrix_flag);
 
 % Second cell element -> first element of simulation
 range{1, 2} = range{1, 1}(1);
@@ -83,7 +83,7 @@ while i <= num_pulses
     pos_target(i,3) = pos_target(i-1,3) + dep_shift;
     
     % Simulate Bellhop 
-    [dist(i),range{i, 1},value{i}] = simulate_one_transmission(signalTX,scenario_settings,pos_target(i,:));
+    [dist(i),range{i, 1},value{i}] = simulate_one_transmission(signalTX,scenario_settings,pos_target(i,:), emission_matrix_flag);
     
     if dist(i) > 0.5
         
@@ -140,7 +140,7 @@ simulation_results.range_axis             = rng;
 simulation_results.value                  = val;
 
 if drawplot
-    imagesc(rng,scenario_settings.timeaxis,abs(val));caxis([0 1e-4]);%xlim([0 400]);
+    imagesc(rng,scenario_settings.timeaxis,abs(val));%caxis([0 1e-4]);%xlim([0 400]);
     xlabel('Estimated distance [m]');
     ylabel('Time [s]');
 end

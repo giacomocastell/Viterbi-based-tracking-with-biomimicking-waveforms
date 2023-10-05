@@ -33,9 +33,11 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
 
     M = np.abs(val[:, index_1:index_2])
     mr = np.abs(rng[:, index_1:index_2])
-    B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
+    # B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
+    B = (np.abs(emission_matrix[0:mr.shape[1], 0:mr.shape[1]])).T
 
-    assert B.shape[1] == abs(index_1 - index_2), 'Second index is too large'
+    if B.shape[1] == abs(index_1 - index_2):
+        print('Second index is too large')
 
     return path, M, mr, B
 

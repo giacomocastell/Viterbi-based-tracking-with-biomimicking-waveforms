@@ -2,14 +2,14 @@
 %%%% Generate biomimicked signal
 %%%%
 
-function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path )
+function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path, signal, mu, var )
     
-    drawplot = 0;
+    drawplot = 1;
 %     currdir = cd;
 
-    filesdir = strcat(path,'*.wav');
-    files=dir(filesdir);
-    [y,fs] = audioread(fullfile(path,files(1).name));
+%     filesdir = strcat(path,'*.wav');
+%     files=dir(filesdir);
+    [y,fs] = audioread(fullfile(path,strcat(signal,'.wav')));
 
     % Compute spectrogram
 
@@ -27,8 +27,8 @@ function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path )
 
     gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
     amp = 1; 
-    var = 1e3;
-    mu = 12e3;                                % To tune if use a new waveform
+%     var = 3e3;
+%     mu = 12e3;                                % To tune if use a new waveform
     
     g = gauss(w, amp, mu, var);
     

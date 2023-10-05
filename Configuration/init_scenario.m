@@ -144,9 +144,6 @@ scenario_settings.compute_emission_matrix = false;
 % Option to store emission matrix
 scenario_settings.save_emission_matrix = false;
 
-% Option to restrict the field of view
-scenario_settings.FoV_restricted = true;
-
 % Option to run Viterbi
 scenario_settings.run_viterbi = true;
 

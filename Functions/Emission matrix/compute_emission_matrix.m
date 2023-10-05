@@ -10,7 +10,7 @@ drawplot = 0;
 num_iterations = scenario_settings.num_iterations;
 num_iterations=1;
 % Cumulative vector to accumulate diplacements row by row (arbitrarily big)
-emission_matrix_row = zeros(1,2 * length(simulation_results.range_axis) + 100);
+emission_matrix_row = zeros(1,4 * length(simulation_results.range_axis));
 
 % Center of the vector (zero displacement)
 zero_index = ceil(length(emission_matrix_row)/2);

@@ -11,9 +11,15 @@ switch flag
         x = A*chirp(t,f1,tau,f2);
     case 'biomimicking'
         path = strcat(pwd,'/Data/Waveforms/biomimicking/');
-        [x,t,tau,fs] = biomimicked_signal_generation( path );
-        f1 = 10e3;                        % To tune if use a new waveform  
-        f2 = 15e3;                        % To tune if use a new waveform
+        signal = 'Orca';
+        f1 = 20e3;                        % To tune if use a new waveform  
+        f2 = 30e3;                        % To tune if use a new waveform
+        center_frequency = round((f1+f2)/2);
+%         center_frequency = 12e3;
+        variance = 3e3;
+
+        [x,t,tau,fs] = biomimicked_signal_generation( path, signal, center_frequency, variance );
+
         A=1;
         x = A*x;
     case 'airgun'
@@ -28,12 +34,13 @@ switch flag
         error('Wrong waveform flag.');
 end
 
-signalTX.x   = x;
-signalTX.t   = t;
-signalTX.f1  = f1;
-signalTX.f2  = f2;
-signalTX.A   = A;
-signalTX.fs  = fs;
-signalTX.tau = tau;
+signalTX.x      = x;
+signalTX.t      = t;
+signalTX.f1     = f1;
+signalTX.f2     = f2;
+signalTX.A      = A;
+signalTX.fs     = fs;
+signalTX.tau    = tau;
+signalTX.signal = signal;
 
 end
