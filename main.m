@@ -18,8 +18,7 @@ simulation_results = scenario_sim(signalTX,scenario_settings);
 
 if scenario_settings.compute_emission_matrix
     emission_matrix = compute_emission_matrix(signalTX, ...
-                                                scenario_settings, ...
-                                                simulation_results);
+                                                scenario_settings);
     
     th = scenario_settings.threshold;
     

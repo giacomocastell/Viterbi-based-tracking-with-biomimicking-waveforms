@@ -2,20 +2,16 @@
 %%%% Calculate emission matrix
 %%%%
 
-function [emission_matrix] = compute_emission_matrix(signalTX, scenario_settings,simulation_results)
+function [emission_matrix] = compute_emission_matrix(signalTX, scenario_settings)
 
 fprintf('\nEmission matrix computation start\n');
 
 drawplot = 0;
 num_iterations = scenario_settings.num_iterations;
-% num_iterations=1;
-% Cumulative vector to accumulate diplacements row by row (arbitrarily big)
-% emission_matrix_row = zeros(1,4 * length(simulation_results.range_axis));
-emission_matrix_row = zeros(1,2*30000);
-% emission_matrix_row = cell(num_iterations, 1);
+% num_iterations=2;
 
-% Center of the vector (zero displacement)
-zero_index = ceil(length(emission_matrix_row)/2);
+emission_matrix_row_iter = cell(num_iterations,1);
+zero_index = zeros(num_iterations,1);
 
 for i=1:num_iterations
     
@@ -27,6 +23,13 @@ for i=1:num_iterations
     range_axis_random      = random_target.range_axis;
     value_random           = random_target.value;
     
+    % Cumulative vector to accumulate diplacements row by row (arbitrarily big)
+    emission_matrix_row_iter{i} = zeros(size(range_axis_random));
+    
+    % Center of the vector (zero displacement)
+    zero_index(i) = ceil(length(emission_matrix_row_iter{i})/2);
+
+
     % Initialize vector to store (index of) position of the target
     indexes = cell(length(actual_distance_random), 1);
     
@@ -53,12 +56,12 @@ for i=1:num_iterations
         [maxVal,~] = max(abs(value_random(j,:)));
         
         % Shift by the amount of the zero index selected
-        shifted_indexes = zero_index + displacement{j};
+        shifted_indexes = zero_index(i) + displacement{j};
         
         % Store normalized value in the i-th row of the matrix
         % May raise an error if displacement factor is too small
         
-        emission_matrix_row(shifted_indexes) = emission_matrix_row(shifted_indexes) + v / maxVal;
+        emission_matrix_row_iter{i}(shifted_indexes) = emission_matrix_row_iter{i}(shifted_indexes) + v / maxVal;
         
         if drawplot
             imagesc(range_axis_random,scenario_settings.timeaxis,abs(value_random));caxis([0 1e-5]);%xlim([0 400]);
@@ -68,18 +71,37 @@ for i=1:num_iterations
     end
 end
 
-% Fill real emission matrix
-% range_axis_target      = simulation_results.range_axis;
-% value_target           = simulation_results.value;
+% Align into one row vector
+rows_lengths = cellfun(@length, emission_matrix_row_iter);
+[maxLength, maxLengthIdx] = max(rows_lengths);
 
+% Initialize row vector
+emission_matrix_row = zeros(1, 2 * maxLength);
+% Find center
+zero_index_row = 2 * zero_index(maxLengthIdx);
+
+% Iterate through vectors and align each according to center
+for i=1:length(emission_matrix_row_iter)
+    
+    lower_bound = zero_index_row - ceil(length(emission_matrix_row_iter{i})/2) + 1;
+    upper_bound = zero_index_row + fix(length(emission_matrix_row_iter{i})/2);
+
+    emission_matrix_row(lower_bound:upper_bound) = ...
+            emission_matrix_row(lower_bound:upper_bound) + ...
+            emission_matrix_row_iter{i};
+
+end
+
+% Fill real emission matrix
 % Initialize emission matrix
 emission_matrix = zeros(size(value_random,2));
 
 for i=1:length(emission_matrix)
     
     % Align actual distance of the target with center of the row
-    total_shift = abs(zero_index-i);
-    emission_matrix(i,:) = emission_matrix_row(total_shift:total_shift + length(range_axis_random)-1);
+    total_shift = zero_index_row - i;
+    emission_matrix(i,:) = emission_matrix_row(total_shift+1:...
+                                               total_shift+1 + length(range_axis_random)-1);
 
 end
 

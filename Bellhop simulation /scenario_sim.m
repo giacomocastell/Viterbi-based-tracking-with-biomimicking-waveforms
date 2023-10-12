@@ -12,7 +12,7 @@ function [simulation_results] = scenario_sim(signalTX,scenario_settings,emission
 num_pulses          = scenario_settings.num_pulses;
 pos_TX              = scenario_settings.pos_TX;
 
-drawplot = 1;
+drawplot = 0;
 
 % Check if the function is called in the context of emission matrix
 % calculation. In this case, draw position of receiver at random
