@@ -22,8 +22,8 @@ mainpath = '/home/giacomocastell/Desktop/TESI/Output/'
 # mainpath = '../Output/'
 
 # If emission matrix is to be taken from somewhere else, pass it to the function
-# emission_matrix_path = ''
-emission_matrix_path = '/home/giacomocastell/Desktop/TESI/Output/Emission matrix/2023-10-05_Dolphin_1_52meters.mat'
+emission_matrix_path = ''
+#emission_matrix_path = '/home/giacomocastell/Desktop/TESI/Output/Emission matrix/2023-10-05_Dolphin_1_52meters.mat'
 
 # Read data
 [path, data, range, emission_matrix] = fn.getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance)

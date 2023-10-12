@@ -98,7 +98,7 @@ if drawplot
 %     title('');
 %     xlabel('Distance [m]');
 %     ylabel('Depth [m]');
-    
+%     
     cd(currdir)
     drawnow;
 end

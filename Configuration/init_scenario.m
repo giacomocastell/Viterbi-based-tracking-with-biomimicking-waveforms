@@ -29,10 +29,19 @@ BHOP_folder = 'tmp_bhop';
 load( strcat (scenario_settings.input_folder, 'bathymetry_SD.mat'));
 
 % Set bathymetry parameters
+
+% Original
 bathy_lon_max = -117.3520;
 bathy_lat_min = 33.08;
 bathy_lon_min = -117.4264;
 bathy_lat_max = 33.15;
+
+% Modified
+% bathy_lon_max = -117.4720;
+% bathy_lat_min = 33.09;
+% bathy_lon_min = -117.5464;
+% bathy_lat_max = 33.16;
+
 npoints = 251;
 [X,Y] = meshgrid( linspace(bathy_lon_min,bathy_lon_max,npoints) , linspace(bathy_lat_min,bathy_lat_max,npoints) );
 bathy = SanDiegoBathymetry(X,Y);
@@ -67,8 +76,14 @@ scenario_settings.timeaxis   = timeaxis;
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Draw initial position of the transmitter/receiver
+
+% Original
 pos_TX = [-117.3992, 33.0924, -120];
 pos_RX = [-117.3995, 33.0928, -120];
+
+% Modified
+% pos_TX = [-117.5352, 33.1120, -120];
+% pos_RX = [-117.5361, 33.1118, -120];
 
 % Movement of the target
 % How much the object moves at each pulse
@@ -91,7 +106,7 @@ scenario_settings.speed       = speed;
 %%%% Waveform settings %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 'chirp', 'biomimicking', 'airgun'
+% 'chirp', 'biomimicking', 'png' 'airgun'
 waveform_type = 'biomimicking'; 
 
 % Desired SNR
@@ -134,9 +149,12 @@ scenario_settings.var_depRX            = var_depRX;
 scenario_settings.max_shift            = max_shift;
 scenario_settings.threshold            = threshold;
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% Output options %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Flags and output options %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Flag for data encoding
+scenario_settings.encode_data_bits = false;
 
 % Option to compute emission matrix
 scenario_settings.compute_emission_matrix = false;
@@ -145,13 +163,13 @@ scenario_settings.compute_emission_matrix = false;
 scenario_settings.save_emission_matrix = false;
 
 % Option to run Viterbi
-scenario_settings.run_viterbi = true;
+scenario_settings.run_viterbi = false;
 
 % Option to store TD matrix
-scenario_settings.save_results = true;
+scenario_settings.save_results = false;
 
 % Option to visualize results
-scenario_settings.plot_results = true;
+scenario_settings.plot_results = false;
 
 
 end

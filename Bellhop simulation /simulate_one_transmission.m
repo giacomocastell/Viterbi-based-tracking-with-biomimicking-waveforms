@@ -39,6 +39,10 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     cutoff = abs(f2-f1);
     fs_downsampled = fs/downsampling_factor;
     
+    if scenario_settings.encode_data_bits
+       demodulated_message = demodulate_data(signalTX,y);
+    end
+    
     [x_bb,tx_bb] = baseband(x,t,fs,(f1+f2)/2,cutoff,downsampling_factor);
     [y_bb,ty_bb] = baseband(y,ty,fs,(f1+f2)/2,cutoff,downsampling_factor);
 
@@ -50,11 +54,11 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     corr(abs(corr) < 0.5*max(abs(corr))) = 0;
 
     % Group delay ???????
-    if strcmp (scenario_settings.waveform_type, 'chirp') || strcmp(scenario_settings.waveform_type, 'biomimicking')
-        group_delay = (length(x_bb) - 1) / (2 * fs_downsampled); 
-    else
+    if strcmp (scenario_settings.waveform_type, 'airgun')
         [~, locs_peak] = max(abs(x));
         group_delay = locs_peak(1)/(2*fs_downsampled); 
+    else
+        group_delay = (length(x_bb) - 1) / (2 * fs_downsampled); 
     end
     
     % Compute group delay and adjust time axis
@@ -77,10 +81,6 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
         range_corr = range_corr(start_idx:end_idx);
     
     end
-
-    % Extract peaks and compute estimates of the distance
-    [pks_corr, locs_corr] = findpeaks(abs(corr),range_corr);
-    ranges = locs_corr(pks_corr > 0.5*max(abs(corr)));
     
     % Estimate delay/range using matched filter (currently not working)
     if MF_flag
@@ -119,6 +119,9 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
         xlabel("Delay [s]")
         title("Cross-correlation");
         
+%         % Extract peaks and compute estimates of the distance
+%         [pks_corr, locs_corr] = findpeaks(abs(corr),range_corr);
+%         ranges = locs_corr(pks_corr > 0.5*max(abs(corr)));
 %         fprintf('\nReal distance = %.2f [m]\n', dist);
 %         fprintf('Estimated distance (cross-corr) = %.2f [m]\n', ranges);
     

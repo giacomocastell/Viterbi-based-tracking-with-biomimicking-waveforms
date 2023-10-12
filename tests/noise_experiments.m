@@ -7,7 +7,7 @@ global bathy BHOP_folder BHOP_title
 % Define scenario
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-drawplot=0;
+drawplot=1;
 
 depth_RX = -120;
 var_depRX = 20;
@@ -26,10 +26,10 @@ BHOP_folder = [pwd() '/' 'tmp_bhop'];
 
 load('bathymetry_SD.mat');
 
-bathy_lon_max = -117.3520;
-bathy_lat_min = 33.08;
-bathy_lon_min = -117.4264;
-bathy_lat_max = 33.15;
+bathy_lon_max = -117.4720;
+bathy_lat_min = 33.09;
+bathy_lon_min = -117.5464;
+bathy_lat_max = 33.16;
 
 npoints = 251;
 [X,Y] = meshgrid( linspace(bathy_lon_min,bathy_lon_max,npoints) , linspace(bathy_lat_min,bathy_lat_max,npoints) );
@@ -37,11 +37,11 @@ bathy = SanDiegoBathymetry(X,Y);
 maxDepth = -min(min(bathy)); 
 
 % Position of the transmitter
-pos_TX = [-117.3852, 33.0920, depth_TX];
+pos_TX = [-117.5352, 33.1120, depth_TX];
 
 % Set position and depth of the receiver
-upleft_rx_node_limit = [-117.4055 , 33.1395 ];
-lowright_rx_node_limit = [ -117.3875, 33.1000 ];
+upleft_rx_node_limit = [-117.5055 , 33.0395 ];
+lowright_rx_node_limit = [ -117.4875, 33.2000 ];
 
 % Draw receiver position at random
 
@@ -51,7 +51,7 @@ posRX_dep = max(depth_RX+(rand-0.5)*var_depRX, 0.8*SanDiegoBathymetry(posRX_lon,
 
 % Activate if want to select random position 
 % pos_RX = [posRX_lon, posRX_lat, depth_RX];
-pos_RX = [-117.3886, 33.0908, depth_RX];
+pos_RX = [-117.5086, 33.1008, depth_RX];
 
 % Extract a random position for the TX
 % rand_pos_TX = zeros(1,2);
@@ -77,14 +77,14 @@ if drawplot
     
     txH = plot3(pos_TX(1), pos_TX(2), pos_TX(3),'dr','MarkerSize',10,'LineWidth',1,'MarkerFaceColor',myOrange);
     % Plot limits of receiver area
-    plot3([upleft_rx_node_limit(1) upleft_rx_node_limit(1)],[upleft_rx_node_limit(2) lowright_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
-    plot3([upleft_rx_node_limit(1) lowright_rx_node_limit(1)],[lowright_rx_node_limit(2) lowright_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
-    plot3([lowright_rx_node_limit(1) lowright_rx_node_limit(1)],[lowright_rx_node_limit(2) upleft_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
-    plot3([lowright_rx_node_limit(1) upleft_rx_node_limit(1)],[upleft_rx_node_limit(2) upleft_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
+%     plot3([upleft_rx_node_limit(1) upleft_rx_node_limit(1)],[upleft_rx_node_limit(2) lowright_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
+%     plot3([upleft_rx_node_limit(1) lowright_rx_node_limit(1)],[lowright_rx_node_limit(2) lowright_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
+%     plot3([lowright_rx_node_limit(1) lowright_rx_node_limit(1)],[lowright_rx_node_limit(2) upleft_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
+%     plot3([lowright_rx_node_limit(1) upleft_rx_node_limit(1)],[upleft_rx_node_limit(2) upleft_rx_node_limit(2)],[0 0],'-','Color','White','LineWidth',2);
     
     % Receiver
     %%%%%% Convenient coordinates for plotting purposes
-    rxH = plot3(posRX_lon,posRX_lat,posRX_dep,'o','Color','White','MarkerFaceColor',myBlue,'MarkerSize',8,'LineWidth',1);
+    rxH = plot3(pos_RX(1),pos_RX(2),pos_RX(3),'o','Color','White','MarkerFaceColor',myBlue,'MarkerSize',8,'LineWidth',1);
 
     legh = legend( [txH, rxH] , 'Transmitter', 'Receiver' );
     set(legh, 'EdgeColor', 'White', 'Box','Off');

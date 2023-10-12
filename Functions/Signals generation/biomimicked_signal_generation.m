@@ -2,10 +2,9 @@
 %%%% Generate biomimicked signal
 %%%%
 
-function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path, signal, mu, var )
+function [xinv,tinv,xinv_orig,tinv_orig,message,tau,fs] = biomimicked_signal_generation( path, signal, mu, var, scenario_settings )
     
-    drawplot = 1;
-%     currdir = cd;
+    drawplot = 0;
 
 %     filesdir = strcat(path,'*.wav');
 %     files=dir(filesdir);
@@ -24,23 +23,18 @@ function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path, signal, mu, v
     % timeaxis=[0:1/fs:tau-1/fs];             % Original signal time axis
     % N=round(fs*tau);                        % Number of samples
     % freqaxis=[0:N-1]*fs/N;                  % Original signal frequency axis
-
+    
+    % Gaussian smoothing function
     gauss = @(x,a,b,c) a*exp(-(((x-b).^2)/(2*c.^2)));
     amp = 1; 
-%     var = 3e3;
-%     mu = 12e3;                                % To tune if use a new waveform
-    
     g = gauss(w, amp, mu, var);
     
     sgauss=zeros(size(s));
     smax=zeros(size(s));
     wmax=zeros(1,size(s,1));
     
+    % Keep only max of each time bin
     for i=1:length(t)                   % For each time
-        
-    %     [~,maxPtIdx]=max(s(endFreqidx:startFreqidx,i));
-    %     mu = w(maxPtIdx+endFreqidx);
-    %     y = gauss(w, amp, mu, var);
         
         sgauss(:,i)=(s(:,i)).*g;        % Apply gaussian filter
         [~,Midx]=max(sgauss(:,i));      % Find index of max
@@ -48,16 +42,43 @@ function [xinv,tinv,tau,fs] = biomimicked_signal_generation( path, signal, mu, v
         smax(Midx,i)=sgauss(Midx,i);    
     end    
     
+    % Encode data eventually
+    if scenario_settings.encode_data_bits
+        sorig = smax;
+        [smax,message] = encodeDataBits(smax, length(t));
+        [xinv_orig,tinv_orig] = istft(sorig,fs,'Window',hamming(window_len,'periodic'),'OverlapLength',overlapping,'FrequencyRange',"onesided");
+    else
+        xinv_orig = y;
+        tinv_orig = t;
+        message = zeros(length(t),1);
+    end
+
     % % Invert spectrogram
     [xinv,tinv] = istft(smax,fs,'Window',hamming(window_len,'periodic'),'OverlapLength',overlapping,'FrequencyRange',"onesided");
     
     if drawplot
         figure;
+        plot(tinv,xinv);
+        title('Time domain');
+        figure;
         subplot(121);
         spectrogram(xinv,window_len,overlapping,freq_resolution,fs,'yaxis');
+        title('Spectrogram of processed signal');
         subplot(122);
         spectrogram(y,window_len,overlapping,freq_resolution,fs,'yaxis');
+        title('Spectrogram of original signal');
     end
+
+    xinv = xinv(4745:58085);
+%     xinv = xinv(6964:end);
+    tinv = tinv(1:length(xinv));
+    tau = tinv(end);
+    
     xinv = xinv';
     tinv = tinv';
+
+    xinv_orig = xinv_orig';
+    tinv_orig = tinv_orig';
+
+
 end

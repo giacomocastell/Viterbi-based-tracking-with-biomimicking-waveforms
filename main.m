@@ -8,7 +8,7 @@ addpath(genpath(pwd));
 scenario_settings = init_scenario();
 
 %%%%% Define transmitted signal
-signalTX = init_transmitted_signal(scenario_settings.waveform_type);
+signalTX = init_transmitted_signal(scenario_settings);
 
 %% Simulate whole scenario
 
@@ -55,17 +55,10 @@ end
 if scenario_settings.save_results
     
     [output] = saveResults(simulation_results, ...
-                            scenario_settings, ...
-                            signalTX, ...
-                            start_idx, ...
-                            end_idx);
-    
-    % Save all simulated scenario
-
-    simulated_scenario.FoV                 = [start_idx end_idx]; 
-    simulated_scenario.scenario_settings   = scenario_settings;
-    simulated_scenario.signalTX            = signalTX;
-    simulated_scenario.simulation_results  = simulation_results;
+                           scenario_settings, ...
+                           signalTX, ...
+                           start_idx, ...
+                           end_idx);
     
 else
     
@@ -83,28 +76,21 @@ end
 if scenario_settings.run_viterbi
     
     mat2py(start_idx - 1, end_idx - 1, scenario_settings, ...
-                                                signalTX, ...
-                                                simulation_results);
-    
-    % Read path to the emission matrix
-    fid = fopen( fullfile(output.current_folder,'emission_matrix.txt') );
-    emission_matrix_path = textscan(fid,'%s','delimiter','\n'); 
-    fclose(fid);
-    
-    % Store into output struct
-    simulated_scenario.emission_matrix_path  = emission_matrix_path{1}{1};
-    
-    % Save output struct
-    save( fullfile (output.current_folder, 'scenario.mat'),'simulated_scenario');
-    
-    % Delete file containing emission matrix path
-    delete (fullfile(output.current_folder,'emission_matrix.txt'))
-
+                                       signalTX, ...
+                                       simulation_results);
 end
+
+% Save all simulated scenario
+saveOutputStructure(output, ...
+                    simulation_results, ...
+                    scenario_settings, ...
+                    signalTX);
 
 %% Results visualization
 if scenario_settings.plot_results
     
-    plotResults( simulation_results, scenario_settings, output );
+    plotResults( simulation_results, ...
+                 scenario_settings, ...
+                 output );
     
 end
