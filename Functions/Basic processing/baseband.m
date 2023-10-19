@@ -15,7 +15,7 @@ modulating_sig = 2*exp(-1i*2*pi*fc*t);
 y_bb = y.*modulating_sig;
 
 % Apply low-pass filter
-filter_order = 12;
+filter_order = 120;
 nyquist_frequency = fs/2;
 
 b = fir1(filter_order, (cutoff_frequency/nyquist_frequency));                                      % Order 12 FIR LPF Fco = 35 Hz
@@ -51,7 +51,7 @@ end
 y_bb_downsampled = downsample(y_filtered,downsampling_factor);
 t_bb_downsampled = downsample(t,downsampling_factor);
 
-y_bb_downsampled = real(y_bb_downsampled);
+% y_bb_downsampled = real(y_bb_downsampled);
 
 
 end

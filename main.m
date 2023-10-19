@@ -1,5 +1,4 @@
-clc;
-clear;
+home;clc;close all force;clear;
 
 addpath(genpath(pwd));
 
@@ -50,7 +49,7 @@ end
 % start_idx = 1;
 % end_idx   = 8000;%length(simulation_results.range_axis);
 
-% Store or not results
+% Store or not results (for running Viterbi)
 if scenario_settings.save_results
     
     [output] = saveResults(simulation_results, ...
@@ -79,13 +78,19 @@ if scenario_settings.run_viterbi
                                        simulation_results);
 end
 
-% Save all simulated scenario
-saveOutputStructure(output, ...
-                    simulation_results, ...
-                    scenario_settings, ...
-                    signalTX);
+%% Save simulated scenario
+
+if scenario_settings.save_results
+    
+    saveOutputStructure(output, ...
+                        simulation_results, ...
+                        scenario_settings, ...
+                        signalTX);
+
+end
 
 %% Results visualization
+
 if scenario_settings.plot_results
     
     plotResults( simulation_results, ...

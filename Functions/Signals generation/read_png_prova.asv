@@ -47,7 +47,7 @@ for t = 1:num_time_bins
     % Calculate the time-domain signal for this frame
     frame_signal = ifft(spectrogram_frame, num_freq_bins);
     
-%     faxis = 50000*(0:num_freq_bins/2-1)/(num_freq_bins);
+%     faxis = 32000*(0:num_freq_bins/2-1)/(num_freq_bins);
 %     figure;plot(faxis,spectrogram_frame(1:num_freq_bins/2));
 %     figure; plot(abs(fft(real(frame_signal),length(frame_signal))));
 
@@ -111,32 +111,32 @@ if drawplot
 end
 
 %% Chirp experiment
-% 
-% fs = 100e3;
-% tau = 1;
-% timeaxis = 0:1/fs:tau-1/fs;
-% 
-% f1 = 1e3;
-% f2 = 5e3;
-% 
-% x = chirp(timeaxis,f1,tau,f2);
-% N = length(x);
-% 
-% fftC = abs(fft(x,N));
-% freqaxis =  fs*(0:N/2-1)/(N);
-% figure;plot(freqaxis*10^-3,fftC(1:length(fftC)/2));
-% figure;plot(fftC);
-% 
-% % Invert
-% 
-% xinv = ifft(fftC,N);
-% tinv = (0:length(xinv)-1)/fs;
-% plot(tinv,real(xinv));
-% 
-% fftCinv = abs(fft(real(xinv),N));
-% figure;plot(freqaxis*10^-3,fftCinv(1:length(fftCinv)/2));
-% figure;plot(fftCinv);
-% 
+
+fs = 100e3;
+tau = 1;
+timeaxis = 0:1/fs:tau-1/fs;
+
+f1 = 1e3;
+f2 = 5e3;
+
+x = chirp(timeaxis,f1,tau,f2);
+N = length(x);
+
+fftC = abs(fft(x,N));
+freqaxis =  fs*(0:N/2-1)/(N);
+figure;plot(freqaxis*10^-3,fftC(1:length(fftC)/2));
+figure;plot(fftC);
+
+% Invert
+
+xinv = ifft(fftC,N);
+tinv = (0:length(xinv)-1)/fs;
+plot(tinv,real(xinv));
+
+fftCinv = abs(fft(real(xinv),N));
+figure;plot(freqaxis*10^-3,fftCinv(1:length(fftCinv)/2));
+figure;plot(fftCinv);
+
 % window_len = 389/5;
 % overlapping = 0;
 % 

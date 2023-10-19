@@ -85,19 +85,19 @@ if drawplot
     drawnow;
 
     % Ray plot
-%     figure(4); clf;
-%     set(gcf,'Position',[680   629   560   289]);
-%     set(gca,'Position',[0.1100    0.1434    0.8350    0.7816]);
-%     currdir = pwd;
-%     create_env_bellhop( 'EB', ceil(maxDepth), bathy_scenario_TXl_RX_bellhop, -pos_TX(3), dist_TXl_RX, -pos_RX(3));
-%     cd(BHOP_folder)
-%     system( [ BHOP_exec ' ' BHOP_title ] );
-%     plotray([BHOP_folder '/' BHOP_title]);
-%     plotbty([BHOP_folder '/' BHOP_title]);
-%     ylim([0 350]);
-%     title('');
-%     xlabel('Distance [m]');
-%     ylabel('Depth [m]');
+    figure(4); clf;
+    set(gcf,'Position',[680   629   560   289]);
+    set(gca,'Position',[0.1100    0.1434    0.8350    0.7816]);
+    currdir = pwd;
+    create_env_bellhop( 'EB', ceil(maxDepth), bathy_scenario_TXl_RX_bellhop, -pos_TX(3), dist_TXl_RX, -pos_RX(3));
+    cd(BHOP_folder)
+    system( [ BHOP_exec ' ' BHOP_title ] );
+    plotray([BHOP_folder '/' BHOP_title]);
+    plotbty([BHOP_folder '/' BHOP_title]);
+    ylim([0 350]);
+    title('');
+    xlabel('Distance [m]');
+    ylabel('Depth [m]');
 %     
     cd(currdir)
     drawnow;
