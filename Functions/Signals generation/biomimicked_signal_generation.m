@@ -69,7 +69,7 @@ function [xinv,tinv,xinv_orig,tinv_orig,message,tau,fs] = biomimicked_signal_gen
         title('Spectrogram of original signal');
     end
 
-    xinv = xinv(4745:58085);
+%     xinv = xinv(4745:58085);
 %     xinv = xinv(6964:end);
     tinv = tinv(1:length(xinv));
     tau = tinv(end);

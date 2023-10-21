@@ -28,4 +28,6 @@ output.current_folder = folderPath;
 output.start_idx      = start_idx;
 output.end_idx        = end_idx;
 
+fprintf('\nResults correctly saved.......\n');
+
 end

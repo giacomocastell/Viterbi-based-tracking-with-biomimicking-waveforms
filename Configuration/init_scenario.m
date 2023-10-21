@@ -79,7 +79,7 @@ scenario_settings.timeaxis   = timeaxis;
 
 % Original
 pos_TX = [-117.3992, 33.0924, -120];
-pos_RX = [-117.3995, 33.0928, -120];
+pos_RX = [-117.4048, 33.0928, -120];
 
 % Modified
 % pos_TX = [-117.5352, 33.1120, -120];
@@ -92,7 +92,9 @@ lat_shift = 0.000001;   % [lat]
 dep_shift = 0.1;        % [m]
 
 % Speed of the target amongst two transmissions
-d = computeDistanceTXRX(pos_TX, pos_RX);
+d = computeDistanceTXRX(pos_TX, [pos_TX(1) + lon_shift ...
+                                 pos_TX(2) + lat_shift ...
+                                 pos_TX(3) + dep_shift]);
 speed = (d/(1/PRF));
 
 scenario_settings.pos_TX      = pos_TX;
@@ -132,8 +134,8 @@ scenario_settings.loss_factor = loss_factor;
 %%%% Emission matrix settings %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Threshold to cut emission matrix in case it is too large
-threshold = .8e4;
+% Threshold to cut emission matrix in case it is too large (max threshold x threshold)
+threshold = 8000;
 
 % Number of random targets calculations
 num_iterations = 10;
@@ -160,16 +162,16 @@ scenario_settings.encode_data_bits = false;
 scenario_settings.compute_emission_matrix = false;
 
 % Option to store emission matrix
-scenario_settings.save_emission_matrix = false;
+scenario_settings.save_emission_matrix = true;
 
 % Option to run Viterbi
-scenario_settings.run_viterbi = false;
+scenario_settings.run_viterbi = true;
 
 % Option to store TD matrix
-scenario_settings.save_results = false;
+scenario_settings.save_results = true;
 
 % Option to visualize results
-scenario_settings.plot_results = false;
+scenario_settings.plot_results = true;
 
 
 end

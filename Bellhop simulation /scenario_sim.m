@@ -4,6 +4,8 @@
 
 function [simulation_results] = scenario_sim(signalTX,scenario_settings,emission_matrix_flag)
 
+fprintf('\nSimulating scenario.......\n');
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Initialization %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -144,5 +146,7 @@ if drawplot
     xlabel('Estimated distance [m]');
     ylabel('Time [s]');
 end
+
+fprintf('\nScenario simulation end\n');
 
 end

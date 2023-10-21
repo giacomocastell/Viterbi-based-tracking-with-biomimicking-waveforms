@@ -26,5 +26,7 @@ function saveOutputStructure(output, simulation_results, scenario_settings, sign
     
     % Save output struct
     save( fullfile (output.current_folder, 'scenario.mat'),'scenario');
+    
+    fprintf('\nOutput structure correctly saved.......\n')
 
 end

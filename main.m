@@ -1,4 +1,4 @@
-home;clc;close all force;clear;
+home;clc;clear;close all force;
 
 addpath(genpath(pwd));
 
@@ -44,10 +44,10 @@ end
 
 % Restrict field of view (memory and computational time reasons)
 [~,start_idx] = min(abs((min(simulation_results.actual_distance)*0.5 - simulation_results.range_axis)));
-[~,end_idx]   = min(abs((max(simulation_results.actual_distance)*1.5 - simulation_results.range_axis)));
+[~,end_idx]   = min(abs((max(simulation_results.actual_distance)*1.25 - simulation_results.range_axis)));
 
 % start_idx = 1;
-% end_idx   = 8000;%length(simulation_results.range_axis);
+% end_idx = length(simulation_results.range_axis);
 
 % Store or not results (for running Viterbi)
 if scenario_settings.save_results

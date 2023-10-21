@@ -47,20 +47,19 @@ function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_se
     [y_bb,ty_bb] = baseband(y,ty,fs,(f1+f2)/2,cutoff,downsampling_factor);
 
     % Estimate delay/range using conv
-    corr = conv(y_bb,x_bb);
+%     corr = conv(y_bb,conj(x_bb));
+    [corr, ~] = xcorr(x_bb,y_bb);
+    
+    % Find main peak
+    [~, max_corr] = max(corr);
+    
+    % Group delay
+    group_delay = (max_corr) / (2 * fs_downsampled);
 
     % Set to zero all convolution results smaller than 1/2 of the peak
     % height
     corr(abs(corr) < 0.5*max(abs(corr))) = 0;
 
-    % Group delay
-    if strcmp (scenario_settings.waveform_type, 'airgun')
-        [~, locs_peak] = max(abs(x));
-        group_delay = locs_peak(1)/(2*fs_downsampled); 
-    else
-        group_delay = (length(x_bb) - 1) / (2 * fs_downsampled); 
-    end
-    
     % Compute group delay and adjust time axis
     delay_corr = ty_bb(1) + tx_bb(1) + (0:length(corr)-1) / fs_downsampled - 2*group_delay;
 

@@ -4,7 +4,7 @@
 
 function [emission_matrix] = compute_emission_matrix(signalTX, scenario_settings)
 
-fprintf('\nEmission matrix computation start\n');
+fprintf('\nComputing emission matrix.......\n');
 
 drawplot = 0;
 num_iterations = scenario_settings.num_iterations;

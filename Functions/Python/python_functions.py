@@ -36,8 +36,8 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
     # B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
     B = (np.abs(emission_matrix[0:mr.shape[1], 0:mr.shape[1]])).T
 
-    if B.shape[1] == abs(index_1 - index_2):
-        print('Second index is too large')
+    # if B.shape[1] == abs(index_1 - index_2):
+    #     print('Second index is too large')
 
     return path, M, mr, B
 
@@ -79,9 +79,10 @@ def viterbi(obs, states, start_p, trans_p, emit_p, bias=0):
     for st in states:
         V[0] [st] = {"prob": start_p[st] * emit_p[st] [obs[0]], "prev": None}
 
+    print('\nRunning Viterbi........\n')
     # Run Viterbi when t > 0
     for t in range(1, len(obs)):
-        print(f"Running Viterbi iteration {t}/{len(obs)}", end='\r')
+        print(f"Viterbi iteration {t}/{len(obs)}", end='\r')
         V.append({})
         for st in states:
             max_tr_prob = V[t - 1] [states[0]] ["prob"] * trans_p[states[0]] [st] * emit_p[st] [obs[t]]
@@ -113,8 +114,9 @@ def viterbi(obs, states, start_p, trans_p, emit_p, bias=0):
         opt.insert(0, V[t + 1] [previous] ["prev"])
         previous = V[t + 1] [previous] ["prev"]
     
+    print ('\nViterbi succesful.......\n')
     print ("The steps of states are " + " ".join(str(o + bias) for o in opt) + " with highest probability of %s" % str(max_prob))
-
+    
     return opt
 
 def plotresults(matrix, ranges, V):
