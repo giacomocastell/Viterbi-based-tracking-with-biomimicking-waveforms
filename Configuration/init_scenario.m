@@ -79,7 +79,7 @@ scenario_settings.timeaxis   = timeaxis;
 
 % Original
 pos_TX = [-117.3992, 33.0924, -120];
-pos_RX = [-117.4048, 33.0928, -120];
+pos_RX = [-117.3985, 33.0928, -120];
 
 % Modified
 % pos_TX = [-117.5352, 33.1120, -120];
@@ -87,7 +87,7 @@ pos_RX = [-117.4048, 33.0928, -120];
 
 % Movement of the target
 % How much the object moves at each pulse
-lon_shift = 0.000001;   % [lon]
+lon_shift = -0.000001;   % [lon]
 lat_shift = 0.000001;   % [lat]
 dep_shift = 0.1;        % [m]
 
@@ -159,7 +159,7 @@ scenario_settings.threshold            = threshold;
 scenario_settings.encode_data_bits = false;
 
 % Option to compute emission matrix
-scenario_settings.compute_emission_matrix = false;
+scenario_settings.compute_emission_matrix = true;
 
 % Option to store emission matrix
 scenario_settings.save_emission_matrix = true;

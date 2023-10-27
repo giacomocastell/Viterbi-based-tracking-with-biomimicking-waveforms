@@ -2,7 +2,7 @@
 %%%% Obtain data from Bellhop and process 
 %%%%
 
-function [dist,range,MF] = simulate_one_transmission(signalTX,scenario_settings,pos_RX, emission_matrix_flag)
+function [dist,range_corr,corr] = simulate_one_transmission(signalTX,scenario_settings,pos_RX, emission_matrix_flag)
     
     % Scenario variables (increase readability)
     maxDepth   = scenario_settings.maxDepth;
@@ -55,7 +55,7 @@ function [dist,range,MF] = simulate_one_transmission(signalTX,scenario_settings,
 
     % Group delay (for time alignment)
     % group_delay = (length(y_bb) - 1) / (2 * fs_downsampled);
-    group_delay = 0;% (length(x_bb) - 1) / (2 * fs_downsampled);
+    group_delay = (-1) / (fs_downsampled);
 
 %     corr(abs(corr) < 0.5*max(abs(corr))) = 0;
     
@@ -68,16 +68,18 @@ function [dist,range,MF] = simulate_one_transmission(signalTX,scenario_settings,
     
     % Remove eventual negative ranges
     % corr = corr(range > 0);
-    MF = MF(range > 0);
-    range = range(range > 0);
+    corr = corr(range > 0);
+
+    % delay_corr = delay_corr(range_corr > 0);
+    range_corr = range_corr(range_corr > 0);
     
     if ~emission_matrix_flag
         
-        [start_idx, end_idx] = remNonzero(MF);
+        [start_idx, end_idx] = remNonzero(corr);
         
         % Update correlation and spatial reference
-        MF = MF(start_idx:end_idx);
-        range = range(start_idx:end_idx);
+        corr = corr(start_idx:end_idx);
+        range_corr = range_corr(start_idx:end_idx);
     
     end
     

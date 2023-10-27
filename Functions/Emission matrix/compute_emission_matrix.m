@@ -24,11 +24,10 @@ for i=1:num_iterations
     value_random           = random_target.value;
     
     % Cumulative vector to accumulate diplacements row by row (arbitrarily big)
-    emission_matrix_row_iter{i} = zeros(size(range_axis_random));
+    emission_matrix_row_iter{i} = zeros(1,2*length(range_axis_random));
     
     % Center of the vector (zero displacement)
     zero_index(i) = ceil(length(emission_matrix_row_iter{i})/2);
-
 
     % Initialize vector to store (index of) position of the target
     indexes = cell(length(actual_distance_random), 1);
@@ -58,9 +57,7 @@ for i=1:num_iterations
         % Shift by the amount of the zero index selected
         shifted_indexes = zero_index(i) + displacement{j};
         
-        % Store normalized value in the i-th row of the matrix
-        % May raise an error if displacement factor is too small
-        
+
         emission_matrix_row_iter{i}(shifted_indexes) = emission_matrix_row_iter{i}(shifted_indexes) + v / maxVal;
         
         if drawplot
@@ -94,14 +91,15 @@ end
 
 % Fill real emission matrix
 % Initialize emission matrix
-emission_matrix = zeros(size(value_random,2));
+emission_matrix_size = round(maxLength/2);
+emission_matrix = zeros(emission_matrix_size);
 
 for i=1:length(emission_matrix)
     
     % Align actual distance of the target with center of the row
     total_shift = zero_index_row - i;
     emission_matrix(i,:) = emission_matrix_row(total_shift+1:...
-                                               total_shift+1 + length(range_axis_random)-1);
+                                               total_shift+1 + emission_matrix_size-1);
 
 end
 

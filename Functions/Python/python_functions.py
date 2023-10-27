@@ -36,8 +36,16 @@ def getData(mainpath, emission_matrix_path, index_1, index_2, waveform, distance
     # B = (np.abs(emission_matrix[index_1:index_2, index_1:index_2])).T
     B = (np.abs(emission_matrix[0:mr.shape[1], 0:mr.shape[1]])).T
 
-    # if B.shape[1] == abs(index_1 - index_2):
-    #     print('Second index is too large')
+    if B.shape[1] > mr.shape[1]:
+        print('Emission matrix larger than actual data')
+        maxL = mr.shape[1]
+        B = B[0:maxL-1,0:maxL-1]
+    elif B.shape[1] < mr.shape[1]:
+        print('Emission matrix smaller than actual data')
+        maxL = B.shape[1]
+        mr = mr[:, 0:maxL-1]
+        M = M[:, 0:maxL-1]
+
 
     return path, M, mr, B
 
