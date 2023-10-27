@@ -23,6 +23,15 @@ for i=1:num_iterations
     range_axis_random      = random_target.range_axis;
     value_random           = random_target.value;
     
+    % Value set in order to avoid going out of memory
+    % Take first 30000 elements
+    max_emission_matrix_size = 3e4;
+
+    if size(value_random,2) > max_emission_matrix_size
+        range_axis_random = range_axis_random(1:max_emission_matrix_size);
+        value_random      = value_random(:,1:max_emission_matrix_size);
+    end
+
     % Cumulative vector to accumulate diplacements row by row (arbitrarily big)
     emission_matrix_row_iter{i} = zeros(1,2*length(range_axis_random));
     
